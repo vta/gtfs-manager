@@ -1,0 +1,48 @@
+{
+  "environment": "development",
+  "debug": 0,
+  "otp_dir": "/srv/otp",
+  "gtfs_data_dir": "/srv/otp/data",
+  "gtfs_temp_dir": "/srv/otp/data_tmp",
+  "osm_file": "map.osm.bz2",
+  "osm_url": "https://s3.amazonaws.com/.../san-francisco-bay_california.osm.bz2",
+  "gtfs_agencies": [
+    {
+      "agency": "VTA",
+      "url": "http://transitfeeds.com/p/vta/45/latest/download"
+    },
+    {
+      "agency": "Caltrain",
+      "url": "http://transitfeeds.com/p/caltrain/122/20170324/download"
+    },
+    {
+      "agency": "BART",
+      "url": "http://transitfeeds.com/p/bart/58/latest/download"
+    },
+    {
+      "agency": "ACTransit",
+      "url": "http://transitfeeds.com/p/ac-transit/121/latest/download"
+    },
+    {
+      "agency": "SantaCruz",
+      "url": "http://transitfeeds.com/p/santa-cruz-metro/343/latest/download"
+    },
+    {
+      "agency": "SFMuni",
+      "url": "http://transitfeeds.com/p/sfmta/60/latest/download"
+    },
+    {
+      "agency": "CountyConnection",
+      "url": "http://transitfeeds.com/p/county-connection/222/latest/download"
+    },
+    {
+      "agency": "SanBenito",
+      "url": "http://transitfeeds.com/p/san-benito-county-express/491/latest/download"
+    },
+    {
+      "agency": "StanfordMarguerite",
+      "url": "https://transportation-forms.stanford.edu/google/google_transit.zip"
+    }
+  ]
+}
+
