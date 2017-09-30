@@ -7,9 +7,9 @@ GTFSM_TEMP_DIR="$OTP_DIR/data_tmp"
 cd $DATA_DIR
 
 # OSM DATA for SF Bay Area
-#curl -L -o map.osm.bz2 https://s3.amazonaws.com/metro-extracts.mapzen.com/san-francisco-bay_california.osm.bz2
-#rm -f map.osm
-#bunzip2 map.osm.bz2
+curl -L -o map.osm.bz2 https://s3.amazonaws.com/metro-extracts.mapzen.com/san-francisco-bay_california.osm.bz2
+rm -f map.osm
+bunzip2 map.osm.bz2
 
 cd $GTFSM_TEMP_DIR
 
