@@ -29,7 +29,7 @@ elif test "$res" == "0"; then
     res=$?
     if test "$res" != "0"; then
         printf "ERROR OSM archive is corrupted - exit code: $res"
- 	exit $res 
+     	exit $res
     fi
 fi
 
