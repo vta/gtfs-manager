@@ -24,17 +24,12 @@ res=$?
 if test "$res" != "0"; then
     printf "ERROR Curl fetch of OpenStreetMap failed - exit code: $res"
 elif test "$res" == "0"; then
-    cp map.osm map.last -v
     rm -f map.osm
     bunzip2 map.osm.bz2
     res=$?
     if test "$res" != "0"; then
         printf "ERROR OSM archive is corrupted - exit code: $res"
-        cp map.last map.osm -v
-        res=$?
-        if test "$res" == "0"; then
-            printf "INFO Restored last OpenStreetMap from archive"
-        fi
+	exit($res)
     fi
 fi
 
@@ -66,7 +61,6 @@ else
     res=$?
     if test "$res" != "0"; then
         printf "ERROR Cannot copy new Graph.obj to default directory - exit code: $res"
-
     fi
 fi
 
