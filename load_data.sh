@@ -29,7 +29,7 @@ elif test "$res" == "0"; then
     res=$?
     if test "$res" != "0"; then
         printf "ERROR OSM archive is corrupted - exit code: $res"
-	exit($res)
+ 	exit $res 
     fi
 fi
 
@@ -67,4 +67,4 @@ fi
 # Restart the supervisor service to reload the new Graph.obj
 sudo /usr/bin/supervisorctl restart vta:vta_otp
 
-exit
+exit 0
