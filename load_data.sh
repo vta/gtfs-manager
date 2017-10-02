@@ -57,7 +57,7 @@ if test "$res" != "0"; then
     printf "ERROR Java build of Graph.obj failed - exit code $res"
 else
     # Copy the new Graph.obj to OpenTripPlanner default directory
-    mv $DATA_DIR/Graph.obj $DATA_DIR/graphs/default/
+    mv -f $DATA_DIR/Graph.obj $DATA_DIR/graphs/default/
     res=$?
     if test "$res" != "0"; then
         printf "ERROR Cannot copy new Graph.obj to default directory - exit code: $res"
