@@ -8,7 +8,7 @@
 # @see https://github.com/vta/
 #
 ###
-
+MAILTO=""
 OTP_DIR="/srv/vta.amigocloud.com"
 DATA_DIR="$OTP_DIR/data"
 GTFSM="python $OTP_DIR/gtfs-manager/src/gtfs-manager/gtfsmanager.py"
