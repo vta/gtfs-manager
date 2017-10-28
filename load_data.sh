@@ -51,7 +51,7 @@ jrun="java -Xmx3G -Xverify:none -jar $OTP_DIR/OTP/target/otp-1.0.0-shaded.jar --
 now=`date +%F`
 
 # Execute Java OpenTripPlanner rebuild of Graph.obj with a log handler
-$jrun 2>&1 | tee $OTP_DIR/logs/otp_oulog    tput-$now\.log
+$jrun
 res=$?
 echo "JRUN RESULT CODE: $res\n"
 if test "$res" != "0"; then
