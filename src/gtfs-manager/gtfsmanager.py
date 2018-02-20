@@ -42,7 +42,7 @@ class GTFSManager:
 
 
     def load_config(self):
-        directory = '/srv/vta.amigocloud.com/gtfs-manager/src/gtfs-manager'
+        directory = '/srv/tripplanner/gtfs-manager/src/gtfs-manager'
         filename = directory + '/config.json'
         if os.path.isfile(filename):
             with open(filename) as json_data:
