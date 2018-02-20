@@ -41,11 +41,11 @@ pwd
 $GTFSM -o $DATA_DIR/ ALL ALL
 
 # Change directory to OpenTripPlanner and confirm
-cd $OTP_DIR/OTP
+cd $OTP_DIR/otp
 pwd
 
 # Java startup configuration for OpenTripPlanner instance
-jrun="java -Xmx6G -Xverify:none -jar $OTP_DIR/OTP/target/otp-1.2.0-shaded.jar --build $OTP_DIR/data --cache $OTP_DIR/ned/ --verbose"
+jrun="java -Xmx6G -Xverify:none -jar $OTP_DIR/otp/target/otp-1.2.0-shaded.jar --build $OTP_DIR/data --cache $OTP_DIR/ned/ --verbose"
 
 # Captures today's date for log file
 now=`date +%F`
