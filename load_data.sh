@@ -9,7 +9,7 @@
 #
 ###
 MAILTO=""
-OTP_DIR="/srv/tripplaner"
+OTP_DIR="/srv/tripplanner"
 DATA_DIR="$OTP_DIR/data"
 GTFSM="python $OTP_DIR/gtfs-manager/src/gtfs-manager/gtfsmanager.py"
 GTFSM_TEMP_DIR="$OTP_DIR/data_tmp"
