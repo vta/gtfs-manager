@@ -45,25 +45,25 @@ cd $OTP_DIR/otp
 pwd
 
 # Java startup configuration for OpenTripPlanner instance
-jrun="java -Xmx6G -Xverify:none -jar $OTP_DIR/otp/otp-1.0.0-shaded.jar --build $OTP_DIR/data/ --cache $OTP_DIR/otp/ned --verbose"
+#jrun="java -Xmx6G -Xverify:none -jar $OTP_DIR/otp/otp-1.0.0-shaded.jar --build $OTP_DIR/data/ --cache $OTP_DIR/otp/ned --verbose"
 
 # Captures today's date for log file
-now=`date +%F`
+#now=`date +%F`
 
 # Execute Java OpenTripPlanner rebuild of Graph.obj with a log handler
-$jrun
-res=$?
-echo "JRUN RESULT CODE: $res\n"
-if test "$res" != "0"; then
-    printf "ERROR Java build of Graph.obj failed - exit code: $res"
-else
+#$jrun
+#res=$?
+#echo "JRUN RESULT CODE: $res\n"
+#if test "$res" != "0"; then
+#    printf "ERROR Java build of Graph.obj failed - exit code: $res"
+#else
     # Copy the new Graph.obj to OpenTripPlanner default directory
     cp -v $DATA_DIR/Graph.obj $DATA_DIR/graphs/default/
     res=$?
     if test "$res" != "0"; then
         printf "ERROR Cannot copy new Graph.obj to default directory - exit code: $res"
     fi
-fi
+#fi
 
 # Restart the supervisor service to reload the new Graph.obj
 #/usr/bin/supervisorctl restart vta:vta_otp
