@@ -66,6 +66,6 @@ else
 fi
 
 # Restart the supervisor service to reload the new Graph.obj
-#/usr/bin/supervisorctl restart vta:vta_otp
+/usr/bin/supervisorctl restart vta:vta_otp
 
 exit 0
