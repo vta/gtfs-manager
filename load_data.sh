@@ -19,7 +19,7 @@ cd $DATA_DIR
 pwd
 
 # Safely use curl with options to download OpenStreetMap latest map archive with error handling
-curl -f -L -w "HTTP Result Code: %{http_code}\nContent-Type: %{content_type}\nFilesize: %{size_download}\nTotal Time: %{time_total}" -o map.osm.bz2 https://s3.amazonaws.com/metro-extracts.mapzen.com/san-francisco-bay_california.osm.bz2
+curl -f -L -w "HTTP Result Code: %{http_code}\nContent-Type: %{content_type}\nFilesize: %{size_download}\nTotal Time: %{time_total}" -o map.osm.bz2 https://s3-us-west-2.amazonaws.com/gis-busstops-inventory/OSM+bayarea+network+older+prod+version/map.osm.bz2
 res=$?
 if test "$res" != "0"; then
     printf "ERROR Curl fetch of OpenStreetMap failed - exit code: $res"
