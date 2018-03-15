@@ -194,6 +194,10 @@ def download_file(url, local_filename):
                 f.write(chunk)
                 #f.flush() commented by recommendation from J.F.Sebastian
     return local_filename
+
+def update_gtfs(agency, dl_url):
+    print(agency, dl_url)
+    download_file(dl_url, '/srv/tripplanner/data/' + "gtfs_" + agency + '_current.zip')
 ######################
 # @Info This checks the transitfeeds being downloaded via transitfeed api
 #       If the feed is the latest and not currently valid ignore
@@ -251,6 +255,7 @@ def download_active():
                     dl_url = version['url']
                     most_recent_id = version['id']
                     gtfs_arr.append([agency, dl_url])
+                    update_gtfs(agency, dl_url)
                     print "ID: " + most_recent_id + " - - - URL: " + dl_url + " - - - UPDATED - - - :)"
                 else:
                     logger.debug('This ' + agency + " feed is less recent.  Not updating.")
@@ -282,14 +287,13 @@ def main():
     parser.add_option('-o', '--output', dest='output_path', default='./', help=' Output directory for merged GTFS')
     # This will pull only active Feeds from TransitFeed via the API
     # Checks dates and ensures that only a VALID feed is being downloaded
-    download_active()
     (options, args) = parser.parse_args()
     if len(args) < 2:
         parser.error('You did not provide all required command line arguments.')
     else:
         if args[0] == 'ALL' and args[1] == 'ALL':
+            download_active()
             gtfsm = GTFSManager(args[0],options.output_path)
-            #agencies = gtfsm.config['gtfs_agencies']
             for x in gtfs_arr:
                 c = 0
                 for z in x:
@@ -298,7 +302,6 @@ def main():
                         gtfsm.agency = z
                     else:
                         gtfsm.url = z
-                #print "Agency: " + gtfsm.agency + "GTFSM URL: " + "[ " + x + " ]" + gtfsm.url
                 gtfsm.setpath(options.output_path)
                 gtfsm.logger.info('Managing GTFS feed for ' + gtfsm.agency)
                 gtfsm.merge(gtfsm.url)
