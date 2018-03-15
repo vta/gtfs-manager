@@ -1,11 +1,22 @@
+#!/usr/bin/python2.7
 from gtfsmerge import *
-import hashlib
-import urllib2
-# import shelve
-import shutil
-import os.path
-import logging
-import json
+import hashlib, tempfile, urllib2, shutil, os.path, logging, json, requests
+from logging.handlers import RotatingFileHandler
+from datetime import datetime
+# For CHMOD
+from stat import S_IREAD, S_IRGRP, S_IROTH
+###################################################3
+# Python3 NOT supported
+# Purpose of this script it to download GTFS feeds based on the config file
+# Only downloads feeds which are valid and recent.
+#### PIP Installs: #########################
+# pip install transitfeed datetime requests
+############################################
+# TransitFeed Info ######################################
+API_KEY = '0f516303-aa10-4fa2-a186-295373e2e8df'
+base_url = 'https://api.transitfeeds.com/v1/'
+gtfs_arr = []
+#########################################################
 
 class GTFSManager:
     def __init__(self, name, path):
@@ -174,6 +185,90 @@ class GTFSManager:
             shutil.copy2(self.current_fname, self.merged_fname)
         return True
 
+def download_file(url, local_filename):
+    # NOTE the stream=True parameter
+    r = requests.get(url, stream=True)
+    with open(local_filename, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk: # filter out keep-alive new chunks
+                f.write(chunk)
+                #f.flush() commented by recommendation from J.F.Sebastian
+    return local_filename
+######################
+# @Info This checks the transitfeeds being downloaded via transitfeed api
+#       If the feed is the latest and not currently valid ignore
+#       If the feed is the latest and VALID add to array and use in merge
+######################
+def download_active():
+    ## Setup the logger which will be logging to gtfs_update.log
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    handler = RotatingFileHandler('gtfs_update.log', maxBytes=10*1024*1024, backupCount = 10)
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    ##########################################################################
+    ## Get the current Date / Time
+    present = datetime.now()
+    ## Location of the config file which contains:
+    # 1. Agency Name
+    # 2. Agency ID
+    # 3. Version Number
+    config_file = '/srv/tripplanner/gtfs-manager/config'
+    ## Open the config file and split each line into the above parameters
+    with open(config_file) as f:
+        ## Store feed information into processed_lines
+        processed_lines = f.read().splitlines()
+    tmp = tempfile.NamedTemporaryFile(dir='/srv/tripplanner/gtfs-manager', delete=False)
+    sub_url = 'getFeedVersions'
+    ## Loop through each agency via the config file
+    for line in processed_lines:
+        # Values stored within the config file separated by spaces
+        agency, agency_id, most_recent = line.split(' ')
+        logger.debug('Managing ' + agency + " gtfs.")
+        most_recent = int(most_recent)
+        payload = {'key': API_KEY, 'feed':agency_id}
+        r = requests.get(base_url + sub_url, params=payload)
+        # r.json()
+        # Keep track of valid / invalid feeds per agency
+        invalid_feeds = 0
+        valid_feeds = 0
+        ## Go through the different versions of the feeds
+        for version in r.json()['results']['versions']:
+            s_date = version['d']['s']
+            f_date = version['d']['f']
+
+            #     print(version['id'])
+            # Is the feeds time before the present?  Is it valid?
+            if (datetime(int(s_date[0:4]), int(s_date[4:6]), int(s_date[6:8])) < present and datetime(int(f_date[0:4]), int(f_date[4:6]), int(f_date[6:8]), 23) > present):
+                valid_feeds += 1
+                logger.debug('This ' + agency + " feed is valid")
+                #  print(version['ts'])
+
+                if(version['ts'] > most_recent):
+                    logger.debug('This ' + agency + " feed is more recent.  Updating.")
+                    most_recent = version['ts']
+                    dl_url = version['url']
+                    most_recent_id = version['id']
+                    gtfs_arr.append([agency, dl_url])
+                    print "ID: " + most_recent_id + " - - - URL: " + dl_url + " - - - UPDATED - - - :)"
+                else:
+                    logger.debug('This ' + agency + " feed is less recent.  Not updating.")
+            else:
+                invalid_feeds += 1
+                logger.debug('This' + agency + "feed is invalid")
+        # Display how many feeds were valid and invalid per agency
+        print 'Valid Feeds: {0}'.format(valid_feeds)
+        print 'Invalid Feeds: {0}'.format(invalid_feeds)
+        # This is what will be replaced within the config file
+        line = agency + ' ' + agency_id + ' ' + str(most_recent) + '\n'
+        tmp.write(line.encode())
+    tmp.close()
+    os.chmod(tmp.name, S_IREAD|S_IRGRP|S_IROTH)
+    os.rename(tmp.name, '/srv/tripplanner/gtfs-manager/config')
+    print 'UPDATED: /srv/tripplanner/gtfs-manager/config'
+
+
 def main():
     """Run the merge driver program."""
     usage = \
@@ -184,24 +279,31 @@ def main():
     """
 
     parser = util.OptionParserLongError(usage=usage)
-    parser.add_option('-o', '--output', dest='output_path', default='./',
-                      help=' Output directory for merged GTFS')
+    parser.add_option('-o', '--output', dest='output_path', default='./', help=' Output directory for merged GTFS')
+    # This will pull only active Feeds from TransitFeed via the API
+    # Checks dates and ensures that only a VALID feed is being downloaded
+    download_active()
     (options, args) = parser.parse_args()
-
     if len(args) < 2:
         parser.error('You did not provide all required command line arguments.')
     else:
         if args[0] == 'ALL' and args[1] == 'ALL':
             gtfsm = GTFSManager(args[0],options.output_path)
-            agencies = gtfsm.config['gtfs_agencies']
-            for x in range(len(agencies)):
-                gtfsm.agency = agencies[x]['agency']
-                gtfsm.url = agencies[x]['url']
+            #agencies = gtfsm.config['gtfs_agencies']
+            for x in gtfs_arr:
+                c = 0
+                for z in x:
+                    c += 1
+                    if c == 1:
+                        gtfsm.agency = z
+                    else:
+                        gtfsm.url = z
+                #print "Agency: " + gtfsm.agency + "GTFSM URL: " + "[ " + x + " ]" + gtfsm.url
                 gtfsm.setpath(options.output_path)
                 gtfsm.logger.info('Managing GTFS feed for ' + gtfsm.agency)
                 gtfsm.merge(gtfsm.url)
         else:
-            gtfsm = GTFSManager(args[0], options.output_path);
+            gtfsm = GTFSManager(args[0], options.output_path)
             gtfsm.logger.info('Managing GTFS feed for ' + args[0])
             gtfsm.merge(args[1])
 
