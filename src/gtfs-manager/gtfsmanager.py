@@ -304,11 +304,11 @@ def main():
                         gtfsm.url = z
                 gtfsm.setpath(options.output_path)
                 gtfsm.logger.info('Managing GTFS feed for ' + gtfsm.agency)
-                gtfsm.merge(gtfsm.url)
+                #gtfsm.merge(gtfsm.url)
         else:
             gtfsm = GTFSManager(args[0], options.output_path)
             gtfsm.logger.info('Managing GTFS feed for ' + args[0])
-            gtfsm.merge(args[1])
+            #gtfsm.merge(args[1])
 
 if __name__ == '__main__':
   util.RunWithCrashHandler(main)
