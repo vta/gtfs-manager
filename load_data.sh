@@ -19,7 +19,17 @@ cd $DATA_DIR
 pwd
 
 # Safely use curl with options to download OpenStreetMap latest map archive with error handling
-curl -f -L -w "HTTP Result Code: %{http_code}\nContent-Type: %{content_type}\nFilesize: %{size_download}\nTotal Time: %{time_total}" -o map.osm.bz2 https://s3-us-west-2.amazonaws.com/gis-busstops-inventory/OSM+bayarea+network+older+prod+version/map.osm.bz2
+#
+
+# NO - wrong - don't use static maps - give the public the latest data...
+#curl -f -L -w "HTTP Result Code: %{http_code}\nContent-Type: %{content_type}\nFilesize: %{size_download}\nTotal Time: %{time_total}" -o map.osm.bz2 https://s3-us-west-2.amazonaws.com/gis-busstops-inventory/OSM+bayarea+network+older+prod+version/map.osm.bz2
+
+##
+# Correct way to do it...
+# https://download.geofabrik.de/north-america/us/california-latest.osm.bz2
+
+curl -f -L -w "HTTP Result Code: %{http_code}\nContent-Type: %{content_type}\nFilesize: %{size_download}\nTotal Time: %{time_total}" -o map.osm.bz2 https://download.geofabrik.de/north-america/us/california-latest.osm.bz2
+
 res=$?
 if test "$res" != "0"; then
     printf "ERROR Curl fetch of OpenStreetMap failed - exit code: $res"
@@ -44,8 +54,12 @@ $GTFSM -o $DATA_DIR/ ALL ALL
 cd $OTP_DIR/otp
 pwd
 
+##
 # Java startup configuration for OpenTripPlanner instance
-jrun="java -Xmx3G -Xverify:none -jar $OTP_DIR/otp/otp-1.2.0-shaded.jar --build $OTP_DIR/data/ --cache $OTP_DIR/otp/ned --verbose"
+#
+# Increased memory to 4G to handle more transitfeeds and graph objects
+##
+jrun="java -Xmx6G -Xverify:none -jar $OTP_DIR/otp/otp-1.2.0-shaded.jar --build $OTP_DIR/data/ --cache $OTP_DIR/otp/ned --verbose"
 
 # Captures today's date for log file
 now=`date +%F`
