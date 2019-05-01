@@ -2,7 +2,7 @@ vta vta/45 1555786766
 bart bart/58 1548255807
 caltrain caltrain/122 1548941606
 ggt golden-gate-bridge-highway-transportation-district/349 1556428166
-sffarries golden-gate-bridge-highway-transportation-district/344 1556361686
+sffarries golden-gate-bridge-highway-transportation-district/344 1556597006
 samTrans samtrans/144 1547520806
 marin marin-transit/345 1551840386
 sonoma sonoma-county-transit/419 1555813171
@@ -12,6 +12,6 @@ sfmuni sfmta/60 1556106326
 lvt livermore-amador-valley-transit-authority/701 0
 countyconnection county-connection/222 1552536506
 sanbenito san-benito-county-express/491 1544730627
-stanfordmarguerite stanford-marguerite-shuttle/736 1554955046
+stanfordmarguerite stanford-marguerite-shuttle/736 1556582666
 ace altamont-corridor-express/823 1556044167
 emerygoround emery-go-round/769 1551139648

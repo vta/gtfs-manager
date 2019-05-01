@@ -22,25 +22,63 @@ pwd
 #
 
 # NO - wrong - don't use static maps - give the public the latest data...
-#curl -f -L -w "HTTP Result Code: %{http_code}\nContent-Type: %{content_type}\nFilesize: %{size_download}\nTotal Time: %{time_total}" -o map.osm.bz2 https://s3-us-west-2.amazonaws.com/gis-busstops-inventory/OSM+bayarea+network+older+prod+version/map.osm.bz2
+# Reverting since it's obvious it's been baked into the code :(
+# 
+# Meeting set to address this issue and find proper solution
+#
+curl -f -L -w "HTTP Result Code: %{http_code}\nContent-Type: %{content_type}\nFilesize: %{size_download}\nTotal Time: %{time_total}" -o map.osm.bz2 https://s3-us-west-2.amazonaws.com/gis-busstops-inventory/OSM+bayarea+network+older+prod+version/map.osm.bz2
 
 ##
 # Correct way to do it...
+# Or at least we thought..
+#
 # https://download.geofabrik.de/north-america/us/california-latest.osm.bz2
-
-curl -f -L -w "HTTP Result Code: %{http_code}\nContent-Type: %{content_type}\nFilesize: %{size_download}\nTotal Time: %{time_total}" -o map.osm.bz2 https://download.geofabrik.de/north-america/us/california-latest.osm.bz2
-
+#
+# And tried...
+#
+#wget -c https://openmaptiles.com/download/WyJjMGYzYjk4Yy1iYjU4LTQ5ZGItOWYzZi0zNjRiZDQxZGJhYWEiLCItMSIsODY3NV0.D6oTYA.2RDL0eOy6PmFo0dpTWPhTeNOspE/osm-2017-07-03-v3.6.1-california_san-francisco-bay.mbtiles?usage=open-source
+#
+# And tried really hard too...
+#
+#https://download.geofabrik.de/north-america/us/california/norcal-latest.osm.bz2
+#
+# Sadly all the kings horses...
+#
+#curl -f -L -w "HTTP Result Code: %{http_code}\nContent-Type: %{content_type}\nFilesize: %{size_download}\nTotal Time: %{time_total}" -o map.osm.bz2 https://download.geofabrik.de/north-america/us/california/norcal-latest.osm.bz2
+#
+# And all the kings men...
+#
+#curl -f -L -w "HTTP Result Code: %{http_code}\nContent-Type: %{content_type}\nFilesize: %{size_download}\nTotal Time: %{time_total}" -o map.osm.bz2 https://openmaptiles.com/download/WyJjMGYzYjk4Yy1iYjU4LTQ5ZGItOWYzZi0zNjRiZDQxZGJhYWEiLCItMSIsODY3NV0.D6oTYA.2RDL0eOy6PmFo0dpTWPhTeNOspE/osm-2017-07-03-v3.6.1-california_san-francisco-bay.mbtiles?usage=open-source
+#
+# Could not put humpty dumpty...
+#
+#curl -f -L -w "HTTP Result Code: %{http_code}\nContent-Type: %{content_type}\nFilesize: %{size_download}\nTotal Time: %{time_total}" -o map.osm.bz2 https://download.geofabrik.de/north-america/us/california-latest.osm.bz2
+#
+# Back together again! :(
+#
+##
+#last=`date -R | sed 's/\+0000/GMT/'`
+#
+#curl -f -L -w "HTTP Result Code: %{http_code}\nContent-Type: %{content_type}\nFilesize: %{size_download}\nTotal Time: %{time_total}" --header "If-Modified-Since: $last" -o map.osm.bz2 https://download.geofabrik.de/north-america/us/california-latest.osm.bz2
+#
+# Be a pro - don't be a bro!
+#
+####
 res=$?
 if test "$res" != "0"; then
     printf "ERROR Curl fetch of OpenStreetMap failed - exit code: $res"
 elif test "$res" == "0"; then
-    rm -f map.osm
-    bunzip2 map.osm.bz2
-    res=$?
-    if test "$res" != "0"; then
-        printf "ERROR OSM archive is corrupted - exit code: $res"
-     	exit $res
-    fi
+	minimumsize=100
+	actualsize=$(du -k "map.osm.bz2" | cut -f 1)
+	if [ $actualsize -ge $minimumsize ]; then
+		rm -f map.osm
+		bunzip2 map.osm.bz2
+		res=$?
+		if test "$res" != "0"; then
+			printf "ERROR OSM archive is corrupted - exit code: $res"
+			exit $res
+		fi
+	fi
 fi
 
 # Change to data tmp directory and confirm
@@ -59,7 +97,7 @@ pwd
 #
 # Increased memory to 4G to handle more transitfeeds and graph objects
 ##
-jrun="java -Xmx6G -Xverify:none -jar $OTP_DIR/otp/otp-1.2.0-shaded.jar --build $OTP_DIR/data/ --cache $OTP_DIR/otp/ned --verbose"
+jrun="java -Xmx4G -Xverify:none -jar $OTP_DIR/otp/otp-1.2.0-shaded.jar --build $OTP_DIR/data/ --cache $OTP_DIR/otp/ned --verbose"
 
 # Captures today's date for log file
 now=`date +%F`
