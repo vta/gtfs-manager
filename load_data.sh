@@ -45,7 +45,7 @@ cd $OTP_DIR/otp
 pwd
 
 # Java startup configuration for OpenTripPlanner instance
-jrun="java -Xmx3G -Xverify:none -jar $OTP_DIR/otp/otp-1.2.0-shaded.jar --build $OTP_DIR/data/ --cache $OTP_DIR/otp/ned --verbose"
+jrun="java -Xmx6G -Xverify:none -jar $OTP_DIR/otp/otp-1.2.0-shaded.jar --build $OTP_DIR/data/ --cache $OTP_DIR/otp/ned --verbose"
 
 # Captures today's date for log file
 now=`date +%F`
@@ -66,6 +66,6 @@ else
 fi
 
 # Restart the supervisor service to reload the new Graph.obj
-/usr/bin/supervisorctl restart vta:vta_otp
+#/usr/bin/supervisorctl restart vta:vta_otp
 
 exit 0
