@@ -13,7 +13,7 @@
     },
     {
       "agency": "Caltrain",
-      "url": "http://transitfeeds.com/p/caltrain/122/20170324/download"
+      "url": "http://transitfeeds.com/p/caltrain/122/latest/download"
     },
     {
       "agency": "BART",
@@ -22,6 +22,10 @@
     {
       "agency": "ACTransit",
       "url": "http://transitfeeds.com/p/ac-transit/121/latest/download"
+    },
+    {
+      "agency": "ACETransit",
+      "url": "http://transitfeeds.com/p/altamont-corridor-express/823/latest/download"
     },
     {
       "agency": "SantaCruz",
@@ -36,13 +40,40 @@
       "url": "http://transitfeeds.com/p/county-connection/222/latest/download"
     },
     {
+      "agency": "SAMTRANS",
+      "url": "http://transitfeeds.com/p/samtrans/144/latest/download"
+    },
+    {
       "agency": "SanBenito",
       "url": "http://transitfeeds.com/p/san-benito-county-express/491/latest/download"
     },
     {
       "agency": "StanfordMarguerite",
-      "url": "https://transportation-forms.stanford.edu/google/google_transit.zip"
+      "url": "http://transitfeeds.com/p/stanford-marguerite-shuttle/736/latest/download"
+    },
+    {
+      "agency": "EmeryGoRound",
+      "url": "http://transitfeeds.com/p/emery-go-round/769/latest/download"
+    },
+    {
+      "agency": "Marin",
+      "url": "http://transitfeeds.com/p/marin-transit/345/latest/download"
+    },
+    {
+      "agency": "sffarries",
+      "url": "http://transitfeeds.com/p/golden-gate-bridge-highway-transportation-district/344/latest/download"
+    },
+    {
+      "agency": "ggt",
+      "url": "http://transitfeeds.com/p/golden-gate-bridge-highway-transportation-district/349/latest/download"
+    },
+    {
+      "agency": "lvt",
+      "url": "http://transitfeeds.com/p/livermore-amador-valley-transit-authority/701/latest/download"
+    },
+    {
+      "agency": "sonoma",
+      "url": "http://transitfeeds.com/p/sonoma-county-transit/419/latest/download"
     }
   ]
 }
-
